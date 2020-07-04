@@ -1,7 +1,7 @@
 console.log(`Before`);
 
 // Callback
-getUser(1, getRepositories);
+// getUser(1, getRepositories);
 
 function displayCommits(commits) {
   console.log(commits);
@@ -16,29 +16,41 @@ function getRepositories(user) {
 }
 
 // Promises
+// three states {Pendeing, Resolved , Rejected}
+getUser(1)
+  .then((user) => getRepos(user.githubUserName))
+  .then((repos) => getCommits(repos[0]))
+  .then((commits) => console.log(commits))
+  .catch((err) => console.log('Error', err.message));
 
 // Async/await
 
 console.log(`After`);
 
-function getUser(id, callback) {
+function getUser(id) {
   // Example of a none-blocking-function
-  setTimeout(() => {
-    console.log(`Reading user from DB...`);
-    callback({ id: id, githubUserName: 'MuhannedNoman' });
-  }, 2000);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log(`Reading user from DB...`);
+      resolve({ id: id, githubUserName: 'MuhannedNoman' });
+    }, 2000);
+  });
 }
 
-function getRepos(userName, callback) {
-  setTimeout(() => {
-    console.log(`Retreving repos...`);
-    callback(['repo1', 'repo2', ' repo3']);
-  }, 2000);
+function getRepos(userName) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log(`Retreving repos for user ${userName}...`);
+      resolve(['repo1', 'repo2', ' repo3']);
+    }, 2000);
+  });
 }
 
-function getCommits(repo, callback) {
-  setTimeout(() => {
-    console.log(`Retreving commits of ${repo}...`);
-    callback(['saha1', 'sha2', ' sha3']);
-  }, 2000);
+function getCommits(repo) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log(`Retreving commits of ${repo}...`);
+      resolve(['saha1', 'sha2', ' sha3']);
+    }, 2000);
+  });
 }
