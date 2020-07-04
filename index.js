@@ -17,13 +17,24 @@ function getRepositories(user) {
 
 // Promises
 // three states {Pendeing, Resolved , Rejected}
-getUser(1)
-  .then((user) => getRepos(user.githubUserName))
-  .then((repos) => getCommits(repos[0]))
-  .then((commits) => console.log(commits))
-  .catch((err) => console.log('Error', err.message));
+// getUser(1)
+//   .then((user) => getRepos(user.githubUserName))
+//   .then((repos) => getCommits(repos[0]))
+//   .then((commits) => console.log(commits))
+//   .catch((err) => console.log('Error', err.message));
 
 // Async/await
+async function showCommits() {
+  try {
+    const user = await getUser(1);
+    const repos = await getRepos(user.githubUserName);
+    const commits = await getCommits(repos[0]);
+    console.log(commits);
+  } catch (err) {
+    console.log('Error', err.message);
+  }
+}
+showCommits();
 
 console.log(`After`);
 
@@ -41,7 +52,8 @@ function getRepos(userName) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       console.log(`Retreving repos for user ${userName}...`);
-      resolve(['repo1', 'repo2', ' repo3']);
+      //   resolve(['repo1', 'repo2', ' repo3']);
+      reject(new Error('User does not have any repos'));
     }, 2000);
   });
 }
